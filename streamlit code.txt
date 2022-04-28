@@ -1,0 +1,110 @@
+# Import Libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import string
+import spacy
+import streamlit as st
+from matplotlib.pyplot import imread
+import seaborn as sns
+import plotly.express as px
+from PIL import Image
+
+rad=st.sidebar.radio('Choose',['Home','Reviews','About'])
+if rad=='Home':
+    st.title("Amazon customer review analysis")
+    link=st.text_input("Enter the link of the product you want to search: ")
+    search_button = st.button("Search")
+    if search_button:
+        st.snow()
+        if link=="https://www.amazon.in/Apple-iPhone-13-128GB-Starlight/dp/B09G9D8KRQ/ref=cm_cr_arp_d_product_top?ie=UTF8":
+
+            review=pd.read_csv('iPhone.csv')
+
+            def main():
+                st.header("Image")
+                image = Image.open('iphone_13.jpg')
+                st.image(image, caption='iPhone 13')
+
+                st.header("Specifications")
+                image = Image.open('iphone_13.webp')
+                st.image(image, caption='iPhone 13')
+
+                st.header("Video Add")
+                video_file = open('iPhone 13 _ Run Baby.mp4', 'rb')
+                video_bytes = video_file.read()
+                st.video(video_bytes)
+
+                st.title("Visualization")
+                st.header("Ratings")
+                fig = plt.figure(figsize=(10, 4))
+                sns.countplot(y='Rating', data=review, order=review.Rating.value_counts().index)
+                st.pyplot(fig)
+                st.header("Sentiment PIE chart")
+                data = pd.read_csv("final_data.csv")
+                w = data.Sentiment_of_the_Review
+                count = w.value_counts()
+                chart = pd.DataFrame(data=count)
+                a=[185,185,119,56,30]
+                b=["Extremely Positive","Neutral","Positive","Negetive","Etremely Negetive"]
+                fig2 = px.pie(values=a,names=b)
+                st.plotly_chart(fig2)
+
+                st.header("Sentiment Density")
+                fig3 = plt.figure(figsize=(10, 4))
+                sns.distplot(data['compound'])
+                st.pyplot(fig3)
+
+                st.header("Sentiment Value for each Review")
+                fig4 = plt.figure(figsize=(10, 4))
+                sns.lineplot(x="index", y="compound", data=data)
+                st.pyplot(fig4)
+
+                st.header("Summary")
+                if ([a[0]+a[2]]>[a[1]+a[3]+a[4]]):
+                    st.write("Good Product")
+                elif (a[0] > [a[1]+a[2]+a[3]+a[4]]):
+                     st.write("Extremely Good Product")
+                elif (a[4] > [a[0]+a[1]+a[2]+a[3]]):
+                     st.write("Extremely Bad Product")
+                elif (a[1] > [a[0]+a[2]+a[3]+a[4]]):
+                     st.write("Average Product Bad Product")
+            main()
+        else:
+            st.header("No Record Found")
+
+if rad=='Reviews':
+
+    st.title("Reviews")
+
+    df=open("iphone.txt","r", encoding="utf-8")
+    L = df.readlines()
+    count = 1
+    for i in L:
+        L3 = i.split()
+        st.write("Review Number", count, ":", i)
+        count += 1
+    st.header("Type the keyword to fetch the required sentences")
+    word = st.text_input("Type Here")
+    search_button = st.button("Search")
+    s=" "
+    count = 1
+    if search_button:
+        for i in L:
+
+            L2=i.split()
+            if word in L2:
+                st.write("Review Number",count,":",i)
+            count+=1
+
+if rad=='About':
+    st.title("Group_3 [P106]")
+    st.header('Team Members')
+    st.write("Gokul P")
+    st.write("J.Rani")
+    st.write("Lakshmi Tejaswi Akella")
+    st.write("Rushikesh Ram Malwade")
+    st.write("Sharan S")
+    st.write("Sudharani.G")
+    st.write("Sukla Pattnaik")
+    st.write("Vrushali Shrikant Patil")
